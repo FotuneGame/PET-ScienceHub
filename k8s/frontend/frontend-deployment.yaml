@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: web
+  template:
+    metadata:
+      labels:
+        component: web
+    spec:
+      containers:
+        - name: frontend
+          image: grigorytitov/docker-freeai-frontend-image:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
