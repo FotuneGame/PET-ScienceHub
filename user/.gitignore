@@ -1,4 +1,4 @@
-node_modules/
-public/
-src/
-.git/
+/node_modules
+/public
+/dist
+/.git
