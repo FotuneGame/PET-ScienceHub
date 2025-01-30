@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-logs
+spec:
+  selector:
+    app: logs-pod
+    tier: backend-logs
+  ports:
+  - protocol: TCP
+    port: 6005
+    targetPort: 6005
+  type: LoadBalancer

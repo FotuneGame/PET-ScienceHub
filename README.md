@@ -24,18 +24,27 @@ kubectl get pods -n ingress-nginx
 
 ### Подключение всех манифестов
 ```
-kubectl apply -f k8s/frontend/
 kubectl apply -f k8s/ingress/
 kubectl apply -f k8s/kafka/
 kubectl apply -f k8s/postgree/
 kubectl apply -f k8s/redis/
+
+kubectl apply -f k8s/relationship/
+kubectl apply -f k8s/frontend/
+kubectl apply -f k8s/reserve/
+kubectl apply -f k8s/basket/
+kubectl apply -f k8s/chats/
+kubectl apply -f k8s/logs/
+kubectl apply -f k8s/repa/
 kubectl apply -f k8s/user/
 ```
 
 
 ### Проверка
 ```
-kubectl get pod
+kubectl get pods
+kubectl get deployments
+kubectl get svc
 kubectl logs <номер-контейнера>
 ```
 

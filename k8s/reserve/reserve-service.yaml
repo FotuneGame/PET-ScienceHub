@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-reserve
+spec:
+  selector:
+    app: reserve-pod
+    tier: backend-reserve
+  ports:
+  - protocol: TCP
+    port: 6002
+    targetPort: 6002
+  type: LoadBalancer

@@ -27,3 +27,45 @@ spec:
                 name: backend-user
                 port:
                   number: 6001
+          - path: /api/v1/reserve/
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-reserve
+                port:
+                  number: 6002
+          - path: /api/v1/repa/
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-repa
+                port:
+                  number: 6003
+          - path: /api/v1/relationship/
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-relationship
+                port:
+                  number: 6004
+          - path: /api/v1/logs/
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-logs
+                port:
+                  number: 6005
+          - path: /api/v1/chats/
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-chats
+                port:
+                  number: 6006
+          - path: /api/v1/basket/
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-basket
+                port:
+                  number: 6007
