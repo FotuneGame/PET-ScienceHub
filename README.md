@@ -7,7 +7,7 @@
 
 ### Запуск minicube 
 ```
-minikube start
+minikube start --memory 2512 --cpus 3
 ```
 
 ### Установка секрета (пароля с именем для обращения)
@@ -57,6 +57,10 @@ kubectl get pv
 ### Запуск туннелирования Minikube
 ```
 minikube tunnel  
+```
+или
+```
+minikube service my-ingress --url
 ```
 
 #### Для захода в Pod в интерактивном режиме

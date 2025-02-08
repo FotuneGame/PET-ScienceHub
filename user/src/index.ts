@@ -7,10 +7,11 @@ import router from "./router";
 import sequelize from "./db";
 import path from "path";
 import cors from "cors";
-import {errorWare} from "./middleware/";
+import {ware} from "./middleware/";
 // This is work with K8S
 import CustomKafka from "./kafka";
 import CustomRedis from "./redis";
+
 
 
 const PORT = process.env.PORT || 3001
@@ -35,12 +36,16 @@ app.use(express.json())
 app.use("/static",express.static(path.join(__dirname,'..', 'public')));
 app.use(fileUpload({createParentPath: true}));
 app.use("/",router);
-app.use(errorWare);
+app.use(ware.errorWare);
 
 
 
 app.listen(PORT, async ()=>{
-    await sequelize.authenticate();
-    await sequelize.sync();
-    console.log(`[user]: User is running at http://localhost:`+PORT);
+    try{
+        await sequelize.authenticate();
+        await sequelize.sync();
+        console.log(`[user]: User is running at http://localhost:`+PORT);
+    }catch(err){
+        console.log(`[user]: Error: `, err);
+    }
 })

@@ -1,0 +1,37 @@
+import {Request, Response, NextFunction} from "express";
+import { Op } from "sequelize";
+import { User } from "../models/user/User";
+import HandlerError from "../error";
+
+
+
+export default async function findUserWare(req:Request, res:Response, next:NextFunction){
+
+    const {email, phone} = req.body;
+    const {id} = req.body.tokens?.body;
+    if(!(email || phone || id))
+        next();
+
+    try{
+        let userFind = null;
+        if(!Number(id)){
+            userFind = await User.findOne({
+                where:{
+                    [Op.or]:[
+                        {email},
+                        {phone}
+                    ],
+                }
+            });
+        }else{
+            userFind = await User.findOne({where:{id}});
+        }
+
+        if(userFind)
+            req.user = userFind;
+
+        next();
+    }catch(err){
+        next(HandlerError.badRequest("[findUserWare]", (err as Error).message));
+    }
+}
