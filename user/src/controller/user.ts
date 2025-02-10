@@ -180,16 +180,16 @@ class UserController{
 
 
     async message(req:Request, res:Response, next:NextFunction){
-        const {code, contact} = req.body;
+        const {code, contact, email, phone} = req.body;
         if(!code || !contact)
             return next(HandlerError.badRequest("[User message]","Bad args!"));
         
         try{
             switch(contact){
                 case "email": 
-                    return next(await sendEmail(code,contact));
+                    return next(await sendEmail(code, email));
                 case "phone": 
-                    return next(await sendSMS(code, contact));
+                    return next(await sendSMS(code, phone));
             }
         }catch(err){
             return next(HandlerError.internal("[User message]", (err as Error).message));
