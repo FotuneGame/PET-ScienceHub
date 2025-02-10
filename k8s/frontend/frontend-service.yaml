@@ -4,7 +4,7 @@ metadata:
   name: frontend
 spec:
   selector:
-    component: web
+    component: frontend
   ports:
   - protocol: TCP
     port: 3000
