@@ -8,7 +8,7 @@ export default async function findMetaUserWare(req:Request, res:Response, next:N
 
     const {user} = req.body;
     if(!user)
-        next();
+        return next();
 
     try{
         const metaUser = await MetaUser.findOne({
@@ -16,10 +16,10 @@ export default async function findMetaUserWare(req:Request, res:Response, next:N
         });
 
         if(metaUser)
-            req.metaUser = metaUser;
+            req.body.metaUser = metaUser;
 
-        next();
+        return next();
     }catch(err){
-        next(HandlerError.badRequest("[findMetaUserWare]", (err as Error).message));
+        return next(HandlerError.badRequest("[findMetaUserWare]", (err as Error).message));
     }
 }

@@ -8,21 +8,22 @@ import redis from "../redis";
 export default async function confirmWare(req:Request, res:Response, next:NextFunction) {
     const {email, phone} = req.body;
     if(!(email || phone))
-        next(HandlerError.badRequest("[confirmWare]", "Bad args!"));
+        return next(HandlerError.badRequest("[confirmWare]", "Bad args!"));
 
     try{
         const data = phone ?? email;
         const data_cash = await redis.isHas(data);
 
         if(!data_cash)
-            next(HandlerError.badRequest("[confirmWare]", "User was not start auth"));
+            return next(HandlerError.badRequest("[confirmWare]", "User was not start auth"));
 
         const info = await redis.get(data) as CodeRedisType;
         if(!Number(info.confirm))
-            next(HandlerError.badRequest("[confirmWare]", "User was not authed!"));
-
-        next();
+            return next(HandlerError.badRequest("[confirmWare]", "User was not authed!"));
+        
+        req.body.contact = info.type;
+        return next();
     }catch(err){
-        next(HandlerError.internal("[confirmWare]",(err as Error).message));
+        return next(HandlerError.internal("[confirmWare]",(err as Error).message));
     }
 }

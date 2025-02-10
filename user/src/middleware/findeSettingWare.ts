@@ -8,7 +8,7 @@ export default async function findSettingWare(req:Request, res:Response, next:Ne
 
     const {user} = req.body;
     if(!user)
-        next();
+        return next();
 
     try{
         const setting = await Setting.findOne({
@@ -16,10 +16,10 @@ export default async function findSettingWare(req:Request, res:Response, next:Ne
         });
 
         if(setting)
-            req.setting = setting;
+            req.body.setting = setting;
 
-        next();
+        return next();
     }catch(err){
-        next(HandlerError.badRequest("[findSettingWare]", (err as Error).message));
+        return next(HandlerError.badRequest("[findSettingWare]", (err as Error).message));
     }
 }

@@ -10,7 +10,7 @@ export default async function findUserWare(req:Request, res:Response, next:NextF
     const {email, phone} = req.body;
     const {id} = req.body.tokens?.body;
     if(!(email || phone || id))
-        next();
+        return next();
 
     try{
         let userFind = null;
@@ -28,10 +28,10 @@ export default async function findUserWare(req:Request, res:Response, next:NextF
         }
 
         if(userFind)
-            req.user = userFind;
+            req.body.user = userFind;
 
-        next();
+        return next();
     }catch(err){
-        next(HandlerError.badRequest("[findUserWare]", (err as Error).message));
+        return next(HandlerError.badRequest("[findUserWare]", (err as Error).message));
     }
 }

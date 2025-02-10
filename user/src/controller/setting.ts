@@ -9,15 +9,16 @@ class SettingController{
 
 
     async get(req:Request, res:Response, next:NextFunction){
-        const {email, phone, tokens} = req.body;
-        let {user, setting} = req.body;
+        const {id} = req.params;
+        if(!Number(id))
+            return next(HandlerError.badRequest("[Setting get]","Bad id!"));
         
-        if(!(email || phone) || !tokens)
-            next(HandlerError.badRequest("[Setting get]","Bad args!"));
-        if(!user || !setting)
-            next(HandlerError.badRequest("[Setting get]","Have not the user or user`s setting!"));
-
-        res.json({access:tokens.access, user:user, setting:setting});
+        try{
+            const setting = await Setting.findOne({where: {userId:id}});
+            res.json({setting:setting});
+        }catch(err){
+            return next(HandlerError.internal("[Setting get]",(err as Error).message));
+        }
     }
 
 
@@ -28,15 +29,15 @@ class SettingController{
 
         
         if(!(email || phone) || !language || !theme || !tokens)
-            next(HandlerError.badRequest("[Setting update]","Bad args!"));
+            return next(HandlerError.badRequest("[Setting update]","Bad args!"));
         if(!user || !setting)
-            next(HandlerError.badRequest("[Setting update]","Have not the user or user`s setting!"));
+            return next(HandlerError.badRequest("[Setting update]","Have not the user or user`s setting!"));
 
         try{
             const updateSetting = await Setting.update({language,theme},{where:{id:setting.id}});
             res.json({access:tokens.access, user:user, setting:updateSetting});
         }catch(err){
-            next(HandlerError.internal("[Setting update]",(err as Error).message));
+            return next(HandlerError.internal("[Setting update]",(err as Error).message));
         }
     }
 }
