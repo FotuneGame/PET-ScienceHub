@@ -15,6 +15,7 @@
   "author": "Grigory Titov",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -31,6 +32,7 @@
     "sequelize": "^6.37.5"
   },
   "devDependencies": {
+    "@types/axios": "^0.9.36",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
