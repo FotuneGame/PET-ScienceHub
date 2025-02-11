@@ -8,9 +8,9 @@ const userRouter:Router = express.Router();
 
 
 userRouter.get("/:id", controller.UserController.get);
-userRouter.post("/refresh",ware.tokensWare);
+userRouter.post("/refresh",ware.tokensWare, controller.UserController.refresh);
 
-userRouter.post("/confirm", ware.checkCodeWare);
+userRouter.post("/confirm", ware.checkCodeWare, controller.UserController.confirm);
 userRouter.post("/code", ware.generationCodeWare, controller.UserController.message);
 
 userRouter.post("/login",ware.confirmWare, ware.findUserWare, ware.findMetaUserWare, ware.findSettingWare, controller.UserController.login);

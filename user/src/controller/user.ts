@@ -93,18 +93,15 @@ class UserController{
 
 
     async delete(req:Request, res:Response, next:NextFunction){
-        const {password, tokens} = req.body;
+        const {tokens} = req.body;
         const {user, metaUser, setting} = req.body;
-        
-        if(!password || !tokens)
+
+        if(!tokens)
             return next(HandlerError.badRequest("[User delete]","Bad args!"));
         if(!user || !metaUser || !setting)
             return next(HandlerError.badRequest("[User delete]","Have not this user!"));
 
         try{
-            const compare = await equalsHash(password,user.password);
-            if(!compare)
-                return next(HandlerError.badRequest("[User delete]","Not correnct password!"));
             
             await MetaUser.destroy({where:{id:metaUser.id}});
             await Setting.destroy({where:{id:setting.id}});
@@ -128,12 +125,10 @@ class UserController{
             return next(HandlerError.badRequest("[User setPassword]","Have not this user!"));
 
         try{
-            const compare = await equalsHash(password,user.password);
-            if(!compare)
-                next(HandlerError.badRequest("[User setPassword]","Not correnct password!"));
             const passwordHash = await generateHash(password);
             const updateUser = await User.update({password:passwordHash},{where:{id:user.id}});
-            res.json({access: tokens.access,user:updateUser,metaUser:metaUser,setting:setting});
+            const newUser = await User.findOne({where:{id:user.id}});
+            res.json({access: tokens.access,user:newUser,metaUser:metaUser,setting:setting});
         }catch(err){
             return next(HandlerError.internal("[User setPassword]", (err as Error).message));
         }
@@ -152,7 +147,8 @@ class UserController{
 
         try{
             const updateUser = await User.update({email:email},{where:{id:user.id}});
-            res.json({access: tokens.access,user:updateUser,metaUser:metaUser,setting:setting});
+            const newUser = await User.findOne({where:{id:user.id}});
+            res.json({access: tokens.access,user:newUser,metaUser:metaUser,setting:setting});
         }catch(err){
             return next(HandlerError.internal("[User setEmail]", (err as Error).message));
         }
@@ -171,7 +167,8 @@ class UserController{
 
         try{
             const updateUser = await User.update({phone:phone},{where:{id:user.id}});
-            res.json({access: tokens.access,user:updateUser,metaUser:metaUser,setting:setting});
+            const newUser = await User.findOne({where:{id:user.id}});
+            res.json({access: tokens.access,user:newUser,metaUser:metaUser,setting:setting});
         }catch(err){
             return next(HandlerError.internal("[User setPhone]", (err as Error).message));
         }
@@ -179,6 +176,26 @@ class UserController{
 
 
 
+    async refresh(req:Request, res:Response, next:NextFunction){
+        const {tokens} = req.body;
+        if(!tokens)
+            return next(HandlerError.badRequest("[User refresh]","Have NOT tokens!"));
+        res.json({access: tokens.access});
+    }
+
+
+    
+    async confirm(req:Request, res:Response, next:NextFunction){
+        const {contact} = req.body;
+
+        if(!contact)
+            return next(HandlerError.badRequest("[User confirm]","Cannot understand contact for confirm!"));
+
+        res.json({confirm:true});
+    }
+
+
+    
     async message(req:Request, res:Response, next:NextFunction){
         const {code, contact, email, phone} = req.body;
         if(!code || !contact)
@@ -187,9 +204,9 @@ class UserController{
         try{
             switch(contact){
                 case "email": 
-                    return next(await sendEmail(code, email));
+                    return next(await sendEmail(code, email,()=>res.json({send:true}) ));
                 case "phone": 
-                    return next(await sendSMS(code, phone));
+                    return next(await sendSMS(code, phone, ()=>res.json({send:true}) ));
             }
         }catch(err){
             return next(HandlerError.internal("[User message]", (err as Error).message));

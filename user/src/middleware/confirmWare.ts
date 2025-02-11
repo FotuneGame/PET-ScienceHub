@@ -11,9 +11,8 @@ export default async function confirmWare(req:Request, res:Response, next:NextFu
         return next(HandlerError.badRequest("[confirmWare]", "Bad args!"));
 
     try{
-        const data = phone ?? email;
+        const data = phone || email;
         const data_cash = await redis.isHas(data);
-
         if(!data_cash)
             return next(HandlerError.badRequest("[confirmWare]", "User was not start auth"));
 

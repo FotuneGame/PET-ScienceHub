@@ -28,7 +28,6 @@ class CustomRedis{
             return HandlerError.badRequest("[Redis set]","Args is BAD!");
 
         const redis = await redisConnection();
-
         try{
             const result = await redis.hSet(key, field, value);
             return result;

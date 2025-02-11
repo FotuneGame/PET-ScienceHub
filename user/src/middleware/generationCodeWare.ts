@@ -10,7 +10,7 @@ export default async function generationCodeWare(req:Request, res:Response, next
     if(!(email || phone))
         return next(HandlerError.badRequest("[generationCodeWare]", "Bad args!"));
     try{
-        const data = phone ?? email;
+        const data = phone || email;
         const code = Math.floor(100000+Math.random()*900000);
         req.body.code = code;
         await redis.set(data, "code", code.toString());

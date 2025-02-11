@@ -8,7 +8,7 @@ import HandlerError from "../error";
 export default async function findUserWare(req:Request, res:Response, next:NextFunction){
 
     const {email, phone} = req.body;
-    const {id} = req.body.tokens?.body;
+    const id = req.body.tokens?.body?.id;
     if(!(email || phone || id))
         return next();
 

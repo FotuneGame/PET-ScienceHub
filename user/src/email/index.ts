@@ -16,7 +16,7 @@ const transporter=nodemailer.createTransport({
 
 
 
-export async function sendEmail(code: number, email: string){
+export async function sendEmail(code: number, email: string, callback: ()=>void){
     const mailOptions = {
         from: process.env.MAIL_FROM,
         to: email,
@@ -28,6 +28,7 @@ export async function sendEmail(code: number, email: string){
 
     try{
         await transporter.sendMail(mailOptions);
+        callback();
     }catch(err){
         return HandlerError.internal("[Mail send]",(err as Error).message);
     }

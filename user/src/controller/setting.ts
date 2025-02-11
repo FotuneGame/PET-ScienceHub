@@ -35,7 +35,8 @@ class SettingController{
 
         try{
             const updateSetting = await Setting.update({language,theme},{where:{id:setting.id}});
-            res.json({access:tokens.access, user:user, setting:updateSetting});
+            const newSetting = await Setting.findOne({where:{id:setting.id}})
+            res.json({access:tokens.access, user:user, setting:newSetting});
         }catch(err){
             return next(HandlerError.internal("[Setting update]",(err as Error).message));
         }
