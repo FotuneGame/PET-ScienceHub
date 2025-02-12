@@ -36,6 +36,12 @@ export class User extends Model{
         allowNull: true,
     })
     declare email: string;
+    
+    @Column({
+        type: DataType.STRING,
+        allowNull: true,
+    })
+    declare social: string;
 
     @Column({
         type: DataType.STRING,

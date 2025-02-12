@@ -6,6 +6,8 @@ import confirmWare from "./confirmWare";
 import tokensWare from "./tokensWare";
 import generationCodeWare from "./generationCodeWare";
 import checkCodeWare from "./checkCodeWare";
+import confirmNewEmailWare from "./confirmNewEmailWare";
+import confirmNewPhoneWare from "./confirmNewPhoneWare";
 
 
 export const ware ={
@@ -16,5 +18,7 @@ export const ware ={
     confirmWare,
     tokensWare,
     generationCodeWare,
-    checkCodeWare
+    checkCodeWare,
+    confirmNewEmailWare,
+    confirmNewPhoneWare
 }

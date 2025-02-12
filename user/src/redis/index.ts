@@ -30,6 +30,8 @@ class CustomRedis{
         const redis = await redisConnection();
         try{
             const result = await redis.hSet(key, field, value);
+            const seconds = Number(process.env.CODE_CONFIRM_ACTIVITY_MINUNTE) * 60 || 30*60;
+            await redis.expire(key, seconds);
             return result;
         }catch(err){
             return HandlerError.badRequest("[Redis set]","Cannot HSET, show more: " + err + "\n[Redis]" + redis);

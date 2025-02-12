@@ -14,6 +14,14 @@ MAIL_FROM="user@service.ru"
 PHONE = "phone"
 PHONE_KEY = "api_key"
 
+GITHUB_CLIENT_ID = "id"
+GITHUB_CLIENT_SECRET="secret"
+GITHUB_URL_CALLBACK="/github/redirect"
+
+GOOGLE_CLIENT_ID="id"
+GOOGLE_CLIENT_SECRET="secret"
+GOOGLE_URL_CALLBACK="/google/redirect"
+
 CODE_CONFIRM_ACTIVITY_MINUNTE=15
 
 
@@ -34,4 +42,13 @@ REDIS_PASSWORD = ""
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 REDIS_DB = 0
+```
+
+Полезные ссылки для настройки Google, SMS, GitHub:
+```
+https://console.cloud.google.com/auth/clients
+
+https://dev.exolve.ru/applications
+
+https://github.com/settings/developers
 ```

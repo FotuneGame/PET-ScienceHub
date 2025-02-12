@@ -18,8 +18,8 @@ export default async function findUserWare(req:Request, res:Response, next:NextF
             userFind = await User.findOne({
                 where:{
                     [Op.or]:[
-                        {email},
-                        {phone}
+                        {email:email},
+                        {phone:phone}
                     ],
                 }
             });

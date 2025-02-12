@@ -21,6 +21,8 @@ class UserController{
         try{
             const user = await User.findOne({where: {id}});
             const metaUser = await MetaUser.findOne({where: {userId:id}});
+            if(user)
+                user.password="";
             res.json({user:user, metaUser:metaUser});
         }catch(err){
             return next(HandlerError.internal("[User get]",(err as Error).message));
@@ -54,7 +56,9 @@ class UserController{
             
             const access = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, false);
             const refresh = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, true);
-    
+
+            if(user)
+                user.password="";
             res.cookie("refresh",refresh,{httpOnly: false, secure: false, signed: false});
             res.json({access,user:user, metaUser:metaUser, setting: setting});
         }catch(err){
@@ -82,7 +86,9 @@ class UserController{
 
             const access = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, false);
             const refresh = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, true);
-    
+            
+            if(user)
+                user.password="";
             res.cookie("refresh",refresh,{httpOnly: false, secure: false, signed: false});
             res.json({access,user:user,metaUser:metaUser,setting:setting});
         }catch(err){
@@ -106,7 +112,9 @@ class UserController{
             await MetaUser.destroy({where:{id:metaUser.id}});
             await Setting.destroy({where:{id:setting.id}});
             await User.destroy({where:{id:user.id}});
-
+            
+            if(user)
+                user.password="";
             res.json({user:user,metaUser:metaUser,setting:setting});
         }catch(err){
             return next(HandlerError.internal("[User delete]", (err as Error).message));
@@ -128,6 +136,8 @@ class UserController{
             const passwordHash = await generateHash(password);
             const updateUser = await User.update({password:passwordHash},{where:{id:user.id}});
             const newUser = await User.findOne({where:{id:user.id}});
+            if(newUser)
+                newUser.password="";
             res.json({access: tokens.access,user:newUser,metaUser:metaUser,setting:setting});
         }catch(err){
             return next(HandlerError.internal("[User setPassword]", (err as Error).message));
@@ -137,18 +147,24 @@ class UserController{
 
 
     async setEmail(req:Request, res:Response, next:NextFunction){
-        const {email, tokens, contact} = req.body;
+        const {newEmail, contact} = req.body;
         const {user, metaUser, setting} = req.body;
 
-        if(!email || !tokens || !contact || contact!="email")
+        if(!newEmail || !contact || contact!="email")
             return next(HandlerError.badRequest("[User setEmail]","Bad args!"));
         if(!user)
             return next(HandlerError.badRequest("[User setEmail]","Have not this user!"));
 
         try{
-            const updateUser = await User.update({email:email},{where:{id:user.id}});
+            const updateUser = await User.update({email:newEmail},{where:{id:user.id}});
             const newUser = await User.findOne({where:{id:user.id}});
-            res.json({access: tokens.access,user:newUser,metaUser:metaUser,setting:setting});
+
+            const access = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, false);
+            const refresh = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, true);
+            if(newUser)
+                newUser.password="";
+            res.cookie("refresh",refresh,{httpOnly: false, secure: false, signed: false});
+            res.json({access,user:newUser,metaUser:metaUser,setting:setting});
         }catch(err){
             return next(HandlerError.internal("[User setEmail]", (err as Error).message));
         }
@@ -157,18 +173,24 @@ class UserController{
 
 
     async setPhone(req:Request, res:Response, next:NextFunction){
-        const {phone, tokens, contact} = req.body;
+        const {newPhone, contact} = req.body;
         const {user, metaUser, setting} = req.body;
 
-        if(!phone || !tokens || !contact || contact!="phone")
+        if(!newPhone || !contact || contact!="phone")
             return next(HandlerError.badRequest("[User setPhone]","Bad args!"));
         if(!user)
             return next(HandlerError.badRequest("[User setPhone]","Have not this user!"));
 
         try{
-            const updateUser = await User.update({phone:phone},{where:{id:user.id}});
+            const updateUser = await User.update({phone:newPhone},{where:{id:user.id}});
             const newUser = await User.findOne({where:{id:user.id}});
-            res.json({access: tokens.access,user:newUser,metaUser:metaUser,setting:setting});
+
+            const access = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, false);
+            const refresh = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, true);
+            if(newUser)
+                newUser.password="";
+            res.cookie("refresh",refresh,{httpOnly: false, secure: false, signed: false});
+            res.json({access,user:newUser,metaUser:metaUser,setting:setting});
         }catch(err){
             return next(HandlerError.internal("[User setPhone]", (err as Error).message));
         }
@@ -193,7 +215,7 @@ class UserController{
 
         res.json({confirm:true});
     }
-
+    
 
     
     async message(req:Request, res:Response, next:NextFunction){
