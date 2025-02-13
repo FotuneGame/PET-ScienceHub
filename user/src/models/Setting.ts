@@ -30,10 +30,11 @@ export class Setting extends Model{
     })
     declare language: string;
 
-    @Default("default")
+    @Default(0)
     @Column({
-        type: DataType.STRING,
+        type: DataType.INTEGER,
+        allowNull: false
     })
-    declare theme: string;
+    declare theme: number;
     
 }

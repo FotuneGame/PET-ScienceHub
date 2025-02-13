@@ -34,7 +34,9 @@
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
     "redis": "^4.7.0",
-    "sequelize": "^6.37.5"
+    "sequelize": "^6.37.5",
+    "validator": "^13.12.0",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/axios": "^0.9.36",
@@ -53,6 +55,8 @@
     "@types/passport-google-oauth20": "^2.0.16",
     "@types/redis": "^4.0.10",
     "@types/sinon": "^17.0.3",
+    "@types/validator": "^13.12.2",
+    "@types/winston": "^2.4.4",
     "chalk": "^4.1.2",
     "mocha": "^11.1.0",
     "sequelize-typescript": "^2.1.6",

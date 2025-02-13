@@ -27,7 +27,7 @@ userRouter.get("/github/fail", controller.GitHubController.fail);
 
 
 
-userRouter.get("/user/:id", controller.UserController.get);
+userRouter.get("/data/:id", controller.UserController.get);
 userRouter.post("/refresh",ware.tokensWare, controller.UserController.refresh);
 
 userRouter.post("/confirm", ware.checkCodeWare, controller.UserController.confirm);

@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import { MetaUser } from "../models/user/MetaUser";
+import { MetaUser } from "../models/MetaUser";
 import HandlerError from "../error";
 
 

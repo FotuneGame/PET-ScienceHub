@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import { Setting } from "../models/user/Setting";
+import { Setting } from "../models/Setting";
 import HandlerError from "../error";
 
 

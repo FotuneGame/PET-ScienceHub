@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from "express";
 import { Op } from "sequelize";
-import { User } from "../models/user/User";
+import { User } from "../models/User";
 import HandlerError from "../error";
 
 

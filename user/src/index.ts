@@ -3,16 +3,16 @@ import express, { Express } from "express";
 import fileUpload from "express-fileupload";
 import cookieParser from 'cookie-parser';
 import session from "express-session";
+import {ware} from "./middleware/";
 import HandlerError from "./error";
 import passport from "./passport";
+import CustomKafka from "./kafka";
+import CustomRedis from "./redis";
+import {logger} from "./logs";
 import router from "./router";
 import sequelize from "./db";
 import path from "path";
 import cors from "cors";
-import {ware} from "./middleware/";
-// This is work with K8S
-import CustomKafka from "./kafka";
-import CustomRedis from "./redis";
 
 
 
@@ -59,7 +59,9 @@ app.listen(PORT, async ()=>{
         await sequelize.authenticate();
         await sequelize.sync();
         console.log(`[user]: User is running at http://localhost:`+PORT);
+        logger.info("[user]: User is running PORT: "+PORT);
     }catch(err){
         console.log(`[user]: Error: `, err);
+        logger.error("[user]: User is NOT running. Error: "+err);
     }
 })

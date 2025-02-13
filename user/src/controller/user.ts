@@ -1,9 +1,10 @@
 import {Request, Response, NextFunction} from "express";
 import {generateJWT, generateHash, equalsHash} from "../utils";
+import validator from "validator";
 
-import { User } from "../models/user/User";
-import { MetaUser } from "../models/user/MetaUser";
-import { Setting } from "../models/user/Setting";
+import { User } from "../models/User";
+import { MetaUser } from "../models/MetaUser";
+import { Setting } from "../models/Setting";
 import { sendEmail } from "../email";
 import { sendSMS } from "../phone";
 import HandlerError from "../error";
@@ -41,6 +42,9 @@ class UserController{
         if(!user)
             return next(HandlerError.badRequest("[User login]","Have not this user!"));
 
+        if(!(validator.isEmail(email) || validator.isMobilePhone(phone)) || !(new Date(date)) || !validator.isIP(adress))
+            return next(HandlerError.badRequest("[User login]","Bad args, not validating!"));
+
         try{
             const compare = await equalsHash(password,user.password);
             if(!compare)
@@ -77,6 +81,12 @@ class UserController{
             return next(HandlerError.badRequest("[User registration]","Bad args!"));
         if(user)
             return next(HandlerError.badRequest("[User registration]","User is used!"));
+        if(!(validator.isEmail(email) || validator.isMobilePhone(phone)) || !(new Date(date)) || !validator.isIP(adress))
+            return next(HandlerError.badRequest("[User registration]","Bad args, not validating!"));
+        if(language && !validator.isISO6391(language))
+            return next(HandlerError.badRequest("[User registration]","Bad args, not validating optional language [not ISO6391]!"));
+        if(Number(theme) &&  Number(theme)<0)
+            return next(HandlerError.badRequest("[User registration]","Bad args, not validating optional theme [not >=0]!"));
 
         try{
             const passwordHash = await generateHash(password);
@@ -131,6 +141,7 @@ class UserController{
             return next(HandlerError.badRequest("[User setPassword]","Bad args!"));
         if(!user)
             return next(HandlerError.badRequest("[User setPassword]","Have not this user!"));
+        
 
         try{
             const passwordHash = await generateHash(password);
@@ -154,6 +165,8 @@ class UserController{
             return next(HandlerError.badRequest("[User setEmail]","Bad args!"));
         if(!user)
             return next(HandlerError.badRequest("[User setEmail]","Have not this user!"));
+        if(!validator.isEmail(newEmail))
+            return next(HandlerError.badRequest("[User setEmail]","Bad args, not validating!"));
 
         try{
             const updateUser = await User.update({email:newEmail},{where:{id:user.id}});
@@ -180,6 +193,9 @@ class UserController{
             return next(HandlerError.badRequest("[User setPhone]","Bad args!"));
         if(!user)
             return next(HandlerError.badRequest("[User setPhone]","Have not this user!"));
+        if(!validator.isMobilePhone(newPhone))
+            return next(HandlerError.badRequest("[User setPhone]","Bad args, not validating!"));
+
 
         try{
             const updateUser = await User.update({phone:newPhone},{where:{id:user.id}});
@@ -222,6 +238,8 @@ class UserController{
         const {code, contact, email, phone} = req.body;
         if(!code || !contact)
             return next(HandlerError.badRequest("[User message]","Bad args!"));
+        if(!(validator.isEmail(email) || validator.isMobilePhone(phone)))
+            return next(HandlerError.badRequest("[User message]","Bad args, not validating!"));
         
         try{
             switch(contact){

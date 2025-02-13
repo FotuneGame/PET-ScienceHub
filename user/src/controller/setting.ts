@@ -1,6 +1,7 @@
 import {Request, Response, NextFunction} from "express";
+import validator from "validator";
 
-import { Setting } from "../models/user/Setting";
+import { Setting } from "../models/Setting";
 import HandlerError from "../error";
 
 
@@ -32,6 +33,8 @@ class SettingController{
             return next(HandlerError.badRequest("[Setting update]","Bad args!"));
         if(!user || !setting)
             return next(HandlerError.badRequest("[Setting update]","Have not the user or user`s setting!"));
+        if(!(validator.isEmail(email) || validator.isMobilePhone(phone)) || !validator.isISO6391(language) || !Number(theme) || Number(theme)<0)
+            return next(HandlerError.badRequest("[Setting update]","Bad args, not validating!"));
 
         try{
             const updateSetting = await Setting.update({language,theme},{where:{id:setting.id}});

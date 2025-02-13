@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
-import { MetaUser } from "../models/user/MetaUser";
-import { Setting } from "../models/user/Setting";
-import { User } from "../models/user/User";
+import { MetaUser } from "../models/MetaUser";
+import { Setting } from "../models/Setting";
+import { User } from "../models/User";
 import {generateJWT} from "../utils";
 import HandlerError from "../error";
 
@@ -9,7 +9,7 @@ class GoogleController{
 
      async sign(req:Request, res:Response, next:NextFunction) {
         const data:any = req.user;
-        console.log(data);
+
         if(!(data))
             return next(HandlerError.badRequest("[GoogleController sign]", "Bad args!"));
     

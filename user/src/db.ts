@@ -1,8 +1,8 @@
 import { Sequelize } from "sequelize-typescript";
 
-import { User } from "./models/user/User";
-import { Setting } from "./models/user/Setting";
-import { MetaUser } from "./models/user/MetaUser";
+import { User } from "./models/User";
+import { Setting } from "./models/Setting";
+import { MetaUser } from "./models/MetaUser";
 
 /*
 "target": "es6", // или более поздняя версия ECMAScript
