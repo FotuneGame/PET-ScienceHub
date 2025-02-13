@@ -13,6 +13,10 @@ minikube start --memory 2512 --cpus 3
 ### Установка секрета (пароля с именем для обращения)
 ```
 kubectl create secret generic pgpassword --from-literal PGPASSWORD=1234
+kubectl create secret generic mailpassword --from-literal MAILPASSWORD=key
+kubectl create secret generic phonepassword --from-literal PHONEPASSWORD=key
+kubectl create secret generic githubpassword --from-literal GITHUBPASSWORD=key
+kubectl create secret generic googlepassword --from-literal GOOGLEPASSWORD=key
 kubectl get secrets
 ```
 
@@ -68,3 +72,6 @@ minikube service my-ingress --url
 ```
 kubectl exec -it <pod_name> -- /bin/bash 
 ```
+
+#### Важное
+1) При развертке для кажого микросервиса настроить свою бд

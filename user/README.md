@@ -6,6 +6,8 @@ URL_CORS = ["http://localhost:3000","http://localhost","https://localhost"]
 SECRET_KEY = "MY_SALT"
 DEPTH_HASH = 3
 
+URL_BASE_INGRESS = "/api/v1/user/"
+
 MAIL_SERVICE = "yandex"
 MAIL_USER = "user"
 MAIL_PASSWORD = "api_key"

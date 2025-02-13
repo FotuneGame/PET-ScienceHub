@@ -9,17 +9,17 @@ const userRouter:Router = express.Router();
 
 
 userRouter.get("/google", passport.authenticate("google", {scope:["profile"]}));
-userRouter.get("/google/redirect", passport.authenticate("google", {
-    successRedirect: "/google/auth",
-    failureRedirect: "/google/fail"
+userRouter.get(process.env.GOOGLE_URL_CALLBACK as string, passport.authenticate("google", {
+    successRedirect: process.env.URL_BASE_INGRESS + "/google/auth",
+    failureRedirect: process.env.URL_BASE_INGRESS + "/google/fail"
 }))
 userRouter.get("/google/auth", controller.GoogleController.sign);
 userRouter.get("/google/fail", controller.GoogleController.fail);
 
 userRouter.get("/github", passport.authenticate("github", {scope:["profile"]}));
-userRouter.get("/github/redirect", passport.authenticate("github", {
-    successRedirect: "/github/auth",
-    failureRedirect: "/github/fail"
+userRouter.get(process.env.GITHUB_URL_CALLBACK as string, passport.authenticate("github", {
+    successRedirect: process.env.URL_BASE_INGRESS + "/github/auth",
+    failureRedirect: process.env.URL_BASE_INGRESS + "/github/fail"
 }))
 userRouter.get("/github/auth", controller.GitHubController.sign);
 userRouter.get("/github/fail", controller.GitHubController.fail);
