@@ -31,6 +31,7 @@ spec:
             - name: http
               containerPort: 6002
           env:
+              #Change db name after
             - name: DB_USER
               value: postgres
             - name: DB_HOST
@@ -38,7 +39,7 @@ spec:
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
-              value: postgres
+              value: "db_users"
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:

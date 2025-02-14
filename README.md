@@ -49,6 +49,7 @@ kubectl apply -f k8s/user/
 kubectl get pods
 kubectl get deployments
 kubectl get svc
+kubectl get jobs 
 kubectl logs <номер-контейнера>
 ```
 
@@ -75,3 +76,4 @@ kubectl exec -it <pod_name> -- /bin/bash
 
 #### Важное
 1) При развертке для кажого микросервиса настроить свою бд
+2) Если pg-job-create-db : Error, то базы данных созданы
