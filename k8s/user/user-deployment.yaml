@@ -31,6 +31,50 @@ spec:
             - name: http
               containerPort: 6001
           env:
+            - name: URL_BASE_INGRESS
+              value: "https://localhost/api/v1/user"
+            #External services
+            - name: MAIL_SERVICE
+              value: "yandex"
+            - name: MAIL_USER
+              value: "g.t1tov"
+            - name: MAIL_FROM
+              value: "g.t1tov@yandex.ru"
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mailpassword
+                  key: MAILPASSWORD
+
+            - name: PHONE
+              value: "79830787382"
+            - name: PHONE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: phonepassword
+                  key: PHONEPASSWORD
+
+            - name: GITHUB_CLIENT_ID
+              value: "Ov23liw7nB4C4Jkv4Av8"
+            - name: GITHUB_URL_CALLBACK
+              value: "/github/redirect"
+            - name: GITHUB_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: githubpassword
+                  key: GITHUBPASSWORD
+
+            - name: GOOGLE_CLIENT_ID
+              value: "893274613037-kd8ijfgal0r91ohohiavn324grefu6v1.apps.googleusercontent.com"
+            - name: GOOGLE_URL_CALLBACK
+              value: "/google/redirect"
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: googlepassword
+                  key: GOOGLEPASSWORD
+
+            #Internal services
             - name: DB_USER
               value: postgres
             - name: DB_HOST
@@ -38,7 +82,7 @@ spec:
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
-              value: postgres
+              value: "db_users"
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:

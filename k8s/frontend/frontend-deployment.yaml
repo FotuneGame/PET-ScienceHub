@@ -6,14 +6,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      component: web
+      component: frontend
   template:
     metadata:
       labels:
-        component: web
+        component: frontend
     spec:
       containers:
-        - name: frontend
+        - name: frontend-container
           image: grigorytitov/docker-freeai-frontend-image:v1
           imagePullPolicy: Always
           ports:

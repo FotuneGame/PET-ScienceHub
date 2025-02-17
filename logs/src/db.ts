@@ -15,5 +15,8 @@ const sequelize = new Sequelize({
     dialect: 'postgres', 
     models: [__dirname  + "/models/**/*.ts"],
   });
+
+
+sequelize.addModels([]);
   
 export default sequelize;

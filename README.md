@@ -7,12 +7,16 @@
 
 ### Запуск minicube 
 ```
-minikube start
+minikube start --memory 2512 --cpus 3
 ```
 
 ### Установка секрета (пароля с именем для обращения)
 ```
 kubectl create secret generic pgpassword --from-literal PGPASSWORD=1234
+kubectl create secret generic mailpassword --from-literal MAILPASSWORD=key
+kubectl create secret generic phonepassword --from-literal PHONEPASSWORD=key
+kubectl create secret generic githubpassword --from-literal GITHUBPASSWORD=key
+kubectl create secret generic googlepassword --from-literal GOOGLEPASSWORD=key
 kubectl get secrets
 ```
 
@@ -45,6 +49,7 @@ kubectl apply -f k8s/user/
 kubectl get pods
 kubectl get deployments
 kubectl get svc
+kubectl get jobs 
 kubectl logs <номер-контейнера>
 ```
 
@@ -58,9 +63,17 @@ kubectl get pv
 ```
 minikube tunnel  
 ```
+или
+```
+minikube service my-ingress --url
+```
 
 #### Для захода в Pod в интерактивном режиме
 Если захотелось зайти в контейнер и выполнить, например тесты...
 ```
 kubectl exec -it <pod_name> -- /bin/bash 
 ```
+
+#### Важное
+1) При развертке для кажого микросервиса настроить свою бд
+2) Если pg-job-create-db : Error, то базы данных созданы
