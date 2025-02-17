@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend-container
-          image: grigorytitov/docker-freeai-frontend-image:v1
-          imagePullPolicy: Always
+          image: grigorytitov/docker-siencehub-frontend-image:v1
+          #imagePullPolicy: Always #Для подгрузки обновлений с DockerHub
           ports:
             - containerPort: 3000

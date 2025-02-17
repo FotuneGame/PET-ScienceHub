@@ -24,8 +24,8 @@ spec:
 
       containers:
         - name: logs-container
-          image: grigorytitov/docker-freeai-logs-image:v1
-          imagePullPolicy: Always
+          image: grigorytitov/docker-siencehub-logs-image:v1
+          #imagePullPolicy: Always #Для подгрузки обновлений с DockerHub
           #command: ["npm","test"] #Для запуска тестов
           ports:
             - name: http

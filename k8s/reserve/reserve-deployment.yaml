@@ -24,8 +24,8 @@ spec:
 
       containers:
         - name: reserve-container
-          image: grigorytitov/docker-freeai-reserve-image:v1
-          imagePullPolicy: Always
+          image: grigorytitov/docker-siencehub-reserve-image:v1
+          #imagePullPolicy: Always #Для подгрузки обновлений с DockerHub
           #command: ["npm","test"] #Для запуска тестов
           ports:
             - name: http
@@ -39,7 +39,7 @@ spec:
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
-              value: "db_users"
+              value: "postgres"
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:

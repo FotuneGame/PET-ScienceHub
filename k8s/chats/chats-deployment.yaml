@@ -24,8 +24,8 @@ spec:
 
       containers:
         - name: chats-container
-          image: grigorytitov/docker-freeai-chats-image:v1
-          imagePullPolicy: Always
+          image: grigorytitov/docker-siencehub-chats-image:v1
+          #imagePullPolicy: Always #Для подгрузки обновлений с DockerHub
           #command: ["npm","test"] #Для запуска тестов
           ports:
             - name: http

@@ -39,11 +39,11 @@ spec:
                 name: backend-reserve
                 port:
                   number: 6002
-          - path: /api/v1/repa
+          - path: /api/v1/article/?(.*)
             pathType: Prefix
             backend:
               service:
-                name: backend-repa
+                name: backend-article
                 port:
                   number: 6003
           - path: /api/v1/relationship/?(.*)
@@ -74,3 +74,25 @@ spec:
                 name: backend-basket
                 port:
                   number: 6007
+
+          - path: /api/v1/scientist/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-scientist
+                port:
+                  number: 6008
+          - path: /api/v1/publisher/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-publisher
+                port:
+                  number: 6009
+          - path: /api/v1/product/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-product
+                port:
+                  number: 6010

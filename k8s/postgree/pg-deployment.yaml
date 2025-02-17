@@ -16,6 +16,38 @@ spec:
         - name: pg-storage
           persistentVolumeClaim:
             claimName: db-persistent-volume-claim
+      initContainers:
+      - name: init-db
+        image: postgres
+        env:
+        - name: PGHOST
+          value: postgres
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pgpassword
+              key: PGPASSWORD
+        - name: PGDATABASE
+          value: "postgres"
+        command: 
+          - /bin/sh
+          - -c
+          - |
+            until pg_isready -h $PGHOST -U $PGUSER; do
+              echo "Waiting for PostgreSQL to start..."
+              sleep 2
+            done
+            psql -c "CREATE DATABASE db_users;"
+            psql -c "CREATE DATABASE db_articles;"
+            psql -c "CREATE DATABASE db_relationships;"
+            psql -c "CREATE DATABASE db_logs;"
+            psql -c "CREATE DATABASE db_chats;"
+            psql -c "CREATE DATABASE db_baskets;"
+            psql -c "CREATE DATABASE db_scientists;"
+            psql -c "CREATE DATABASE db_publishers;"
+            psql -c "CREATE DATABASE db_products;"
       containers:
         - name: postgres-container
           image: postgres

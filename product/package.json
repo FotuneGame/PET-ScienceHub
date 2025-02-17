@@ -1,0 +1,47 @@
+{
+  "name": "product",
+  "version": "1.0.0",
+  "description": "This is microservices for product of sientist",
+  "main": "index.js",
+  "scripts": {
+    "docker_push": "docker push grigorytitov/docker-siencehub-product-image:v1 ",
+    "docker_run": "docker run -p 6010:6010 -d --name docker-siencehub-product-app grigorytitov/docker-siencehub-product-image:v1",
+    "docker": "tsc && docker build --build-arg APP_DIR=. --build-arg NODE_ENV=production -t grigorytitov/docker-siencehub-product-image:v1 .",
+    "dev": "SET NODE_ENV=development && nodemon src/index.ts ",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "test": "mocha dist/test/**/*.test.js"
+  },
+  "author": "Grigory Titov",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-fileupload": "^1.5.1",
+    "kafkajs": "^2.2.4",
+    "nodemon": "^3.1.9",
+    "pg": "^8.13.1",
+    "pg-hstore": "^2.3.4",
+    "redis": "^4.7.0",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/express-fileupload": "^1.5.1",
+    "@types/kafkajs": "^1.8.2",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.10.7",
+    "@types/redis": "^4.0.10",
+    "@types/sinon": "^17.0.3",
+    "chalk": "^4.1.2",
+    "mocha": "^11.1.0",
+    "sequelize-typescript": "^2.1.6",
+    "sinon": "^19.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}

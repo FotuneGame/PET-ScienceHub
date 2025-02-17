@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-scientist
+spec:
+  progressDeadlineSeconds: 240
+  selector:
+    matchLabels:
+      app: scientist-pod
+      tier: backend-scientist
+      track: stable
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: scientist-pod
+        tier: backend-scientist
+        track: stable
+    spec:
+      volumes:
+        - name: scientist-volume
+          persistentVolumeClaim:
+            claimName: scientist-persistent-volume-claim
+
+      containers:
+        - name: scientist-container
+          image: grigorytitov/docker-siencehub-scientist-image:v1
+          #imagePullPolicy: Always #Для подгрузки обновлений с DockerHub
+          #command: ["npm","test"] #Для запуска тестов
+          ports:
+            - name: http
+              containerPort: 6008
+          env:
+              #Change db name after
+            - name: DB_USER
+              value: postgres
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "db_scientists"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
+
+            - name: KAFKA_CLIENT_ID
+              value: "scientist-app"
+            - name: KAFKA_BROCKERS_HOST
+              value: kafka
+            - name: KAFKA_BROCKERS_PORT
+              value: "29092"
+            - name: KAFKA_BROCKERS_REPLICATION_FACTOR
+              value: "2"
+
+            - name: REDIS_NAME
+              value: ""
+            - name: REDIS_PASSWORD
+              value: ""
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_DB
+              value: "0"
+          volumeMounts:
+            - mountPath: /public
+              name: scientist-volume

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-publisher
+spec:
+  selector:
+    app: publisher-pod
+    tier: backend-publisher
+  ports:
+  - protocol: TCP
+    port: 6009
+    targetPort: 6009
+  type: LoadBalancer

@@ -24,8 +24,8 @@ spec:
 
       containers:
         - name: user-container
-          image: grigorytitov/docker-freeai-user-image:v1
-          imagePullPolicy: Always
+          image: grigorytitov/docker-siencehub-user-image:v1
+          #imagePullPolicy: Always #Для подгрузки обновлений с DockerHub
           #command: ["npm","test"] #Для запуска тестов
           ports:
             - name: http

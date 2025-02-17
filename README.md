@@ -26,20 +26,27 @@ minikube addons enable ingress
 kubectl get pods -n ingress-nginx
 ```
 
-### Подключение всех манифестов
+### Подключение манифестов доп ПО 
 ```
 kubectl apply -f k8s/ingress/
 kubectl apply -f k8s/kafka/
 kubectl apply -f k8s/postgree/
 kubectl apply -f k8s/redis/
+```
 
+### Подключение манифестов собственного ПО 
+После запуска доп ПО.
+```
 kubectl apply -f k8s/relationship/
+kubectl apply -f k8s/scientist/
+kubectl apply -f k8s/publisher/
 kubectl apply -f k8s/frontend/
 kubectl apply -f k8s/reserve/
+kubectl apply -f k8s/article/
+kubectl apply -f k8s/product/
 kubectl apply -f k8s/basket/
 kubectl apply -f k8s/chats/
 kubectl apply -f k8s/logs/
-kubectl apply -f k8s/repa/
 kubectl apply -f k8s/user/
 ```
 

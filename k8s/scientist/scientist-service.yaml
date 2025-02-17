@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-scientist
+spec:
+  selector:
+    app: scientist-pod
+    tier: backend-scientist
+  ports:
+  - protocol: TCP
+    port: 6008
+    targetPort: 6008
+  type: LoadBalancer

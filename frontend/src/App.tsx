@@ -10,9 +10,11 @@ function App() {
 
         const res: string[] = [];
         const urls = [
-          "https://localhost/api/v1/user/",
           "https://localhost/api/v1/reserve/",
-          "https://localhost/api/v1/repa/",
+          "https://localhost/api/v1/article/",
+          "https://localhost/api/v1/scientist/",
+          "https://localhost/api/v1/publisher/",
+          "https://localhost/api/v1/product/",
           "https://localhost/api/v1/relationship/",
           "https://localhost/api/v1/logs/",
           "https://localhost/api/v1/chats/",
@@ -31,7 +33,7 @@ function App() {
       setInfo(state => [...res]);
     })
     .catch(err => {
-      setInfo(state => err)
+      setInfo(state => [err.message+": "+err.stack])
     })
   },[info]);
 
@@ -39,6 +41,7 @@ function App() {
   return (
     <div className="App">
       Hello suchki!
+      <a href="https://localhost/api/v1/user/google">user for google</a>
       <ul>
         {info.map( (el, i)=>{
           return (

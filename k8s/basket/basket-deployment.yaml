@@ -24,8 +24,8 @@ spec:
 
       containers:
         - name: basket-container
-          image: grigorytitov/docker-freeai-basket-image:v1
-          imagePullPolicy: Always
+          image: grigorytitov/docker-siencehub-basket-image:v1
+          #imagePullPolicy: Always #Для подгрузки обновлений с DockerHub
           #command: ["npm","test"] #Для запуска тестов
           ports:
             - name: http

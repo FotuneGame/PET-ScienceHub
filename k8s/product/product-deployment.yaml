@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-product
+spec:
+  progressDeadlineSeconds: 240
+  selector:
+    matchLabels:
+      app: product-pod
+      tier: backend-product
+      track: stable
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: product-pod
+        tier: backend-product
+        track: stable
+    spec:
+      volumes:
+        - name: product-volume
+          persistentVolumeClaim:
+            claimName: product-persistent-volume-claim
+
+      containers:
+        - name: product-container
+          image: grigorytitov/docker-siencehub-product-image:v1
+          #imagePullPolicy: Always #Для подгрузки обновлений с DockerHub
+          #command: ["npm","test"] #Для запуска тестов
+          ports:
+            - name: http
+              containerPort: 6009
+          env:
+              #Change db name after
+            - name: DB_USER
+              value: postgres
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "db_products"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
+
+            - name: KAFKA_CLIENT_ID
+              value: "product-app"
+            - name: KAFKA_BROCKERS_HOST
+              value: kafka
+            - name: KAFKA_BROCKERS_PORT
+              value: "29092"
+            - name: KAFKA_BROCKERS_REPLICATION_FACTOR
+              value: "2"
+
+            - name: REDIS_NAME
+              value: ""
+            - name: REDIS_PASSWORD
+              value: ""
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_DB
+              value: "0"
+          volumeMounts:
+            - mountPath: /public
+              name: product-volume

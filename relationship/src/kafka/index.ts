@@ -44,7 +44,7 @@ class CustomKafka{
         message = Object.assign({
             headers: {},
             partition: 0,
-            key: "user"
+            key: "relationship"
         }, message);
         
 
@@ -79,7 +79,7 @@ class CustomKafka{
             return HandlerError.badRequest("[Kafka sub]","[Kafka]: count of topics and function handler is not equal!");
 
         config = Object.assign({
-            groupId: "user-group",
+            groupId: "relationship-group",
             heartbeatInterval:1000 
         },config);
 

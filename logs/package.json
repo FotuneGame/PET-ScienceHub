@@ -4,9 +4,9 @@
   "description": "This is microservices for work with logs of users",
   "main": "index.js",
   "scripts": {
-    "docker_push": "docker push grigorytitov/docker-freeai-logs-image:v1 ",
-    "docker_run": "docker run -p 6005:6005 -d --name docker-freeai-logs-app grigorytitov/docker-freeai-logs-image:v1",
-    "docker": "tsc && docker build --build-arg APP_DIR=. --build-arg NODE_ENV=production -t grigorytitov/docker-freeai-logs-image:v1 .",
+    "docker_push": "docker push grigorytitov/docker-siencehub-logs-image:v1 ",
+    "docker_run": "docker run -p 6005:6005 -d --name docker-siencehub-logs-app grigorytitov/docker-siencehub-logs-image:v1",
+    "docker": "tsc && docker build --build-arg APP_DIR=. --build-arg NODE_ENV=production -t grigorytitov/docker-siencehub-logs-image:v1 .",
     "dev": "SET NODE_ENV=development && nodemon src/index.ts ",
     "start": "node dist/index.js",
     "build": "tsc",

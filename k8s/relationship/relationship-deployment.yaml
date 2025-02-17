@@ -24,8 +24,8 @@ spec:
 
       containers:
         - name: relationship-container
-          image: grigorytitov/docker-freeai-relationship-image:v1
-          imagePullPolicy: Always
+          image: grigorytitov/docker-siencehub-relationship-image:v1
+          #imagePullPolicy: Always #Для подгрузки обновлений с DockerHub
           #command: ["npm","test"] #Для запуска тестов
           ports:
             - name: http

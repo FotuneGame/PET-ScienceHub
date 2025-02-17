@@ -4,9 +4,9 @@
   "description": "This is microservices for work with reserve",
   "main": "index.js",
   "scripts": {
-    "docker_push": "docker push grigorytitov/docker-freeai-reserve-image:v1 ",
-    "docker_run": "docker run -p 6002:6002 -d --name docker-freeai-reserve-app grigorytitov/docker-freeai-reserve-image:v1",
-    "docker": "tsc && docker build --build-arg APP_DIR=. --build-arg NODE_ENV=production -t grigorytitov/docker-freeai-reserve-image:v1 .",
+    "docker_push": "docker push grigorytitov/docker-siencehub-reserve-image:v1 ",
+    "docker_run": "docker run -p 6002:6002 -d --name docker-siencehub-reserve-app grigorytitov/docker-siencehub-reserve-image:v1",
+    "docker": "tsc && docker build --build-arg APP_DIR=. --build-arg NODE_ENV=production -t grigorytitov/docker-siencehub-reserve-image:v1 .",
     "dev": "SET NODE_ENV=development && nodemon src/index.ts ",
     "start": "node dist/index.js",
     "build": "tsc",
