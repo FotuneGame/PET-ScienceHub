@@ -3,6 +3,7 @@ import validator from "validator";
 
 import { Setting } from "../models/Setting";
 import HandlerError from "../error";
+import sequelize from "../db";
 
 
 
@@ -36,11 +37,15 @@ class SettingController{
         if(!(validator.isEmail(email) || validator.isMobilePhone(phone)) || !validator.isISO6391(language) || !Number(theme) || Number(theme)<0)
             return next(HandlerError.badRequest("[Setting update]","Bad args, not validating!"));
 
+        const trans = await sequelize.transaction();
+
         try{
-            const updateSetting = await Setting.update({language,theme},{where:{id:setting.id}});
+            const updateSetting = await Setting.update({language,theme},{where:{id:setting.id}, transaction: trans});
             const newSetting = await Setting.findOne({where:{id:setting.id}})
+            await trans.commit();
             res.json({access:tokens.access, user:user, setting:newSetting});
         }catch(err){
+            await trans.rollback();
             return next(HandlerError.internal("[Setting update]",(err as Error).message));
         }
     }

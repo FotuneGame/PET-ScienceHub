@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-db
+data:
+  init.sql: |
+    CREATE DATABASE db_users;
+    CREATE DATABASE db_articles;
+    CREATE DATABASE db_relationships;
+    CREATE DATABASE db_logs;
+    CREATE DATABASE db_chats;
+    CREATE DATABASE db_baskets;    
+    CREATE DATABASE db_scientists;  
+    CREATE DATABASE db_publishers;       
+    CREATE DATABASE db_products;            

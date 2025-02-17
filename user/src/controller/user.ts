@@ -8,6 +8,7 @@ import { Setting } from "../models/Setting";
 import { sendEmail } from "../email";
 import { sendSMS } from "../phone";
 import HandlerError from "../error";
+import sequelize from "../db";
 
 
 
@@ -45,18 +46,22 @@ class UserController{
         if(!(validator.isEmail(email) || validator.isMobilePhone(phone)) || !(new Date(date)) || !validator.isIP(adress))
             return next(HandlerError.badRequest("[User login]","Bad args, not validating!"));
 
+        const trans = await sequelize.transaction();
+
         try{
             const compare = await equalsHash(password,user.password);
             if(!compare)
                 return next(HandlerError.badRequest("[User login]","Not correct password!"));
 
             if(!metaUser)
-                metaUser = await MetaUser.create({userId:user.id, lastPlaceIn:adress, lastTimeIn: date});
+                metaUser = await MetaUser.create({userId:user.id, lastPlaceIn:adress, lastTimeIn: date}, { transaction: trans });
             else
-                metaUser = await MetaUser.update({lastPlaceIn:adress, lastTimeIn: date},{where:{id:metaUser.id}});
+                metaUser = await MetaUser.update({lastPlaceIn:adress, lastTimeIn: date},{where:{id:metaUser.id}, transaction: trans});
 
             if(!setting)
-                setting = await Setting.create({userId:user.id});
+                setting = await Setting.create({userId:user.id}, { transaction: trans });
+
+            await trans.commit();
             
             const access = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, false);
             const refresh = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, true);
@@ -66,6 +71,7 @@ class UserController{
             res.cookie("refresh",refresh,{httpOnly: false, secure: false, signed: false});
             res.json({access,user:user, metaUser:metaUser, setting: setting});
         }catch(err){
+            await trans.rollback();
             return next(HandlerError.internal("[User login]",(err as Error).message));
         }
     }
@@ -88,11 +94,15 @@ class UserController{
         if(Number(theme) &&  Number(theme)<0)
             return next(HandlerError.badRequest("[User registration]","Bad args, not validating optional theme [not >=0]!"));
 
+        const trans = await sequelize.transaction();
+
         try{
             const passwordHash = await generateHash(password);
-            user = await User.create({password:passwordHash,email:email,phone:phone,name:name});
-            const metaUser = await MetaUser.create({userId:user.id,lastPlaceIn:adress, lastTimeIn: date});
-            const setting = await Setting.create({userId:user.id,language:language,theme:theme});
+            user = await User.create({password:passwordHash,email:email,phone:phone,name:name}, { transaction: trans });
+            const metaUser = await MetaUser.create({userId:user.id,lastPlaceIn:adress, lastTimeIn: date}, { transaction: trans });
+            const setting = await Setting.create({userId:user.id,language:language,theme:theme}, { transaction: trans });
+            
+            await trans.commit();
 
             const access = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, false);
             const refresh = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, true);
@@ -102,6 +112,7 @@ class UserController{
             res.cookie("refresh",refresh,{httpOnly: false, secure: false, signed: false});
             res.json({access,user:user,metaUser:metaUser,setting:setting});
         }catch(err){
+            await trans.rollback();
             return next(HandlerError.internal("[User registration]",(err as Error).message));
         }
     }
@@ -117,16 +128,21 @@ class UserController{
         if(!user || !metaUser || !setting)
             return next(HandlerError.badRequest("[User delete]","Have not this user!"));
 
+        const trans = await sequelize.transaction();
+
         try{
             
-            await MetaUser.destroy({where:{id:metaUser.id}});
-            await Setting.destroy({where:{id:setting.id}});
-            await User.destroy({where:{id:user.id}});
+            await MetaUser.destroy({where:{id:metaUser.id}, transaction: trans });
+            await Setting.destroy({where:{id:setting.id}, transaction: trans });
+            await User.destroy({where:{id:user.id}, transaction: trans });
+
+            await trans.commit();
             
             if(user)
                 user.password="";
             res.json({user:user,metaUser:metaUser,setting:setting});
         }catch(err){
+            await trans.rollback();
             return next(HandlerError.internal("[User delete]", (err as Error).message));
         }
     }
@@ -142,15 +158,18 @@ class UserController{
         if(!user)
             return next(HandlerError.badRequest("[User setPassword]","Have not this user!"));
         
+        const trans = await sequelize.transaction();
 
         try{
             const passwordHash = await generateHash(password);
-            const updateUser = await User.update({password:passwordHash},{where:{id:user.id}});
+            const updateUser = await User.update({password:passwordHash},{where:{id:user.id}, transaction: trans});
             const newUser = await User.findOne({where:{id:user.id}});
+            await trans.commit();
             if(newUser)
                 newUser.password="";
             res.json({access: tokens.access,user:newUser,metaUser:metaUser,setting:setting});
         }catch(err){
+            await trans.rollback();
             return next(HandlerError.internal("[User setPassword]", (err as Error).message));
         }
     }
@@ -168,9 +187,13 @@ class UserController{
         if(!validator.isEmail(newEmail))
             return next(HandlerError.badRequest("[User setEmail]","Bad args, not validating!"));
 
+        const trans = await sequelize.transaction();
+
         try{
-            const updateUser = await User.update({email:newEmail},{where:{id:user.id}});
+            const updateUser = await User.update({email:newEmail},{where:{id:user.id}, transaction: trans});
             const newUser = await User.findOne({where:{id:user.id}});
+
+            await trans.commit();
 
             const access = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, false);
             const refresh = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, true);
@@ -179,6 +202,7 @@ class UserController{
             res.cookie("refresh",refresh,{httpOnly: false, secure: false, signed: false});
             res.json({access,user:newUser,metaUser:metaUser,setting:setting});
         }catch(err){
+            await trans.rollback();
             return next(HandlerError.internal("[User setEmail]", (err as Error).message));
         }
     }
@@ -196,10 +220,13 @@ class UserController{
         if(!validator.isMobilePhone(newPhone))
             return next(HandlerError.badRequest("[User setPhone]","Bad args, not validating!"));
 
+        const trans = await sequelize.transaction();
 
         try{
-            const updateUser = await User.update({phone:newPhone},{where:{id:user.id}});
+            const updateUser = await User.update({phone:newPhone},{where:{id:user.id}, transaction: trans});
             const newUser = await User.findOne({where:{id:user.id}});
+
+            await trans.commit();
 
             const access = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, false);
             const refresh = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, true);
@@ -208,6 +235,7 @@ class UserController{
             res.cookie("refresh",refresh,{httpOnly: false, secure: false, signed: false});
             res.json({access,user:newUser,metaUser:metaUser,setting:setting});
         }catch(err){
+            await trans.rollback();
             return next(HandlerError.internal("[User setPhone]", (err as Error).message));
         }
     }

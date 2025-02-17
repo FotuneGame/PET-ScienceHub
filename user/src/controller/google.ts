@@ -4,6 +4,9 @@ import { Setting } from "../models/Setting";
 import { User } from "../models/User";
 import {generateJWT} from "../utils";
 import HandlerError from "../error";
+import sequelize from "../db";
+
+
 
 class GoogleController{
 
@@ -12,27 +15,33 @@ class GoogleController{
 
         if(!(data))
             return next(HandlerError.badRequest("[GoogleController sign]", "Bad args!"));
+
+        const trans = await sequelize.transaction();
     
         try{
             const name = data.displayName;
             let user = await User.findOne({where:{name,social:"google"}});
             if(!user)
-                user = await User.create({name:name, social: "google"});
+                user = await User.create({name:name, social: "google"}, { transaction: trans });
             
             let metaUser = await MetaUser.findOne({where:{userId:user.id}});
             if(!metaUser)
-                metaUser = await MetaUser.create({userId:user.id, lastPlaceIn: "google", lastTimeIn: new Date().toDateString()});
+                metaUser = await MetaUser.create({userId:user.id, lastPlaceIn: "google", lastTimeIn: new Date().toDateString()}, { transaction: trans });
     
             let setting = await Setting.findOne({where:{userId:user.id}});
             if(!setting)
-                setting = await Setting.create({userId:user.id});
+                setting = await Setting.create({userId:user.id}, { transaction: trans });
+
+            await trans.commit();
             
             const access = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, false);
             const refresh = generateJWT({id:user.id,name:user.name,password:user.password, email:user.email, phone:user.phone}, true);
     
             res.cookie("refresh",refresh,{httpOnly: false, secure: false, signed: false});
             res.json({access,user:user, metaUser:metaUser, setting: setting});
+            
         }catch(err){
+            await trans.rollback();
             return next(HandlerError.internal("[GoogleController sign]",(err as Error).message));
         }
     }
